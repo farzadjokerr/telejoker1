@@ -38,11 +38,20 @@ install_rocks() {
     then echo "Error. Exiting."; exit $RET;
   fi
 
-  ./.luarocks/bin/luarocks install lbase64 20120807-3
+ ./.luarocks/bin/luarocks install lbase64 20120807-3
+ RET=$?; if [ $RET -ne 0 ];
+    then echo "Error. Exiting."; exit $RET;
+  fi
+  
+ ./.luarocks/bin/luarocks install luasocket
   RET=$?; if [ $RET -ne 0 ];
     then echo "Error. Exiting."; exit $RET;
   fi
 
+  ./.luarocks/bin/luarocks install oauth
+  RET=$?; if [ $RET -ne 0 ];
+    then echo "Error. Exiting."; exit $RET;
+  fi
 
   ./.luarocks/bin/luarocks install redis-lua
   RET=$?; if [ $RET -ne 0 ];
@@ -111,15 +120,6 @@ else
     echo "Run $0 install"
     exit 1
   fi
-  
-  #Adding some color. By @iicc1 :D
-   echo -e "\033[38;5;208m"
-   echo -e "      ____  ____ _____                        "
-   echo -e "     |    \|  _ )_   _|___ ____   __  __      "
-   echo -e "     | |_  )  _ \ | |/ .__|  _ \_|  \/  |     "
-   echo -e "     |____/|____/ |_|\____/\_____|_/\/\_|     "
-   echo -e "                                              \033[0;00m"
-   echo -e "\e[36m"
-
-  ./tg/bin/telegram-cli -k ./tg/tg-server.pub -s ./bot/bot.lua -l 1 -E $@
+  rm -r ../.telegram-cli/state #Prevent tg from crash
+  ./tg/bin/telegram-cli -k ./tg/tg-server.pub -s ./bot/seedbot.lua -l 1 -E $@
 fi
